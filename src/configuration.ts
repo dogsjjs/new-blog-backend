@@ -7,6 +7,7 @@ import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ResponseMiddleware } from './middleware/response.middleware'; // Import the new middleware
+import { AuthMiddleware } from './middleware/auth.middleware'; // 引入新的 AuthMiddleware
 import { ReportMiddleware } from './middleware/report.middleware';
 
 @Configuration({
@@ -27,7 +28,7 @@ export class MainConfiguration {
 
   async onReady() {
     // add middleware
-    this.app.useMiddleware([ReportMiddleware, ResponseMiddleware]); // Add ResponseMiddleware
+    this.app.useMiddleware([ReportMiddleware, AuthMiddleware, ResponseMiddleware]); // 添加 AuthMiddleware
     // add filter
     this.app.useFilter([DefaultErrorFilter]);
   }

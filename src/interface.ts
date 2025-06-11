@@ -13,7 +13,6 @@ export interface ICategory {
   updatedAt?: Date; // 更新时间
 }
 
-
 export interface ITag {
   id?: string; // 标签ID
   name: string; // 标签名称
@@ -22,7 +21,6 @@ export interface ITag {
   updatedAt?: Date;
 }
 
-
 export interface IPhoto {
   id?: string; // 图片ID
   imageUrl: string; // 图片地址
@@ -30,4 +28,13 @@ export interface IPhoto {
   uploadTime?: Date; // 上传时间 (使用 CreateDateColumn)
   createdAt?: Date; // 创建时间 (TypeORM 自动管理)
   updatedAt?: Date; // 更新时间 (TypeORM 自动管理)
+}
+
+export interface IUser { // 用户接口
+  id?: string; // 用户ID
+  username: string; // 用户名
+  password?: string; // 密码 (在接口中通常是可选的，因为不会直接返回)
+  email?: string; // 邮箱，可选
+  createdAt?: Date;
+  updatedAt?: Date;
 }
