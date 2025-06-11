@@ -7,7 +7,7 @@ export class User implements IUser {
   id: string;
 
   @Index({ unique: true }) // 为 username 创建唯一索引
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'varchar', length: 50})
   username: string;
 
   @Column({ type: 'varchar', length: 32 }) // MD5 哈希通常是 32 个十六进制字符
