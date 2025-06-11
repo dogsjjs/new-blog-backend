@@ -21,3 +21,13 @@ export interface ITag {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+
+export interface IPhoto {
+  id?: string; // 图片ID
+  imageUrl: string; // 图片地址
+  description?: string; // 图片描述，可选
+  uploadTime?: Date; // 上传时间 (使用 CreateDateColumn)
+  createdAt?: Date; // 创建时间 (TypeORM 自动管理)
+  updatedAt?: Date; // 更新时间 (TypeORM 自动管理)
+}
