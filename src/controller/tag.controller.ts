@@ -1,8 +1,9 @@
-import { Inject, Controller, Get, Post, Put, Del, Param, Body, HttpCode } from '@midwayjs/core';
+// tag.controller.ts
+import { Inject, Controller, Get, Post, Put, Del, Param, Body, HttpCode, Query } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { TagService } from '../service/tag.service';
 import { ITag } from '../interface';
-import { CreateTagDTO, UpdateTagDTO } from '../dto/tag.dto';
+import { CreateTagDTO, UpdateTagDTO, QueryTagDTO } from '../dto/tag.dto';
 import { Validate } from '@midwayjs/validate';
 
 @Controller('/tag')
@@ -20,8 +21,10 @@ export class TagController {
   }
 
   @Get('/', { description: '获取所有博客标签' })
-  async getAllTags(): Promise<ITag[]> {
-    return this.tagService.getAllTags();
+  @Validate() // 对 QueryTagDTO 进行校验
+  async getAllTags(@Query() queryParams: QueryTagDTO): Promise<{ tags: ITag[]; total: number; page: number; pageSize: number }> {
+    const { tags, total } = await this.tagService.getAllTags(queryParams);
+    return { tags, total, page: queryParams.page, pageSize: queryParams.pageSize };
   }
 
   @Get('/:id', { description: '根据ID获取单个博客标签' })

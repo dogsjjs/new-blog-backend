@@ -13,6 +13,9 @@ export class Tag implements ITag {
   @Column({ type: 'text', nullable: true }) // 标签描述，允许为空
   description?: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true }) // 标签图标的 URL 或类名
+  icon?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

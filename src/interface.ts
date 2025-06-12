@@ -20,6 +20,8 @@ export interface ITag {
   description?: string; // 标签描述，可选
   createdAt?: Date;
   updatedAt?: Date;
+  postCount?: number; // 该标签下的文章数量
+  icon?: string; // 标签图标，可选
 }
 
 export interface IPost {
