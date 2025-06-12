@@ -34,5 +34,19 @@ export default {
   jwt: {
     secret: process.env.JWT_SECRET || 'your-very-secure-and-long-secret-key-for-jwt', // 强烈建议使用环境变量
     expiresIn: '7d', // Token 有效期，例如 7 天
+  },
+  // 如果 @midwayjs/cross-domain 使用 'crossDomain' 作为键名
+  // 请将 'cors' 修改为 'crossDomain'
+  crossDomain: { // 或者保持 'cors'，取决于组件文档
+    origin: (ctx: any) => { // 动态设置 origin，更安全
+      // 在开发环境允许来自 localhost 的常见前端端口
+      const allowedOrigins = ['http://localhost:5173'];
+      const requestOrigin = ctx.get('Origin');
+      if (process.env.NODE_ENV === 'local' && allowedOrigins.includes(requestOrigin)) {
+        return requestOrigin;
+      }
+      return process.env.ALLOWED_ORIGIN || 'https://your-production-frontend.com'; // 生产环境应配置具体的域名
+    },
+    credentials: true, // 允许携带凭证 (cookies)
   }
 } as MidwayConfig;

@@ -14,6 +14,9 @@ importers:
       '@midwayjs/core':
         specifier: ^3.12.0
         version: 3.20.4
+      '@midwayjs/cross-domain':
+        specifier: ^3.20.5
+        version: 3.20.5
       '@midwayjs/info':
         specifier: ^3.12.0
         version: 3.20.5
@@ -407,6 +410,10 @@ packages:
 
   '@midwayjs/core@3.20.4':
     resolution: {integrity: sha512-ePwj5XFAzhJXErKh2TnkGi1B+QsIJdoQpef3i/c4NEeW5bjXfDTaQO02lxq/Ln6h6hVHi9lPN3Qh4sS1ufqJPA==}
+    engines: {node: '>=12'}
+
+  '@midwayjs/cross-domain@3.20.5':
+    resolution: {integrity: sha512-Io8/oNuYiIGPCFDLpGBdOV6aT9SdFQcAVgSGfRXa4h1MObfEDTii7YviaTkDMcUfPpP2ULQnK0533u5LQ/AzLg==}
     engines: {node: '>=12'}
 
   '@midwayjs/event-bus@1.11.1':
@@ -3442,6 +3449,10 @@ snapshots:
       class-transformer: 0.5.1
       picomatch: 2.3.1
       reflect-metadata: 0.2.2
+
+  '@midwayjs/cross-domain@3.20.5':
+    dependencies:
+      vary: 1.1.2
 
   '@midwayjs/event-bus@1.11.1': {}
 
