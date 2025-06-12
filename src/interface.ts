@@ -21,6 +21,24 @@ export interface ITag {
   updatedAt?: Date;
 }
 
+export interface IPost {
+  id?: string;  // 文章ID
+  title: string; // 文章标题
+  description?: string; // 文章描述，可选
+  slug?: string; // 自定义 URL
+  coverImage?: string; // 首图 URL
+  categoryId: string; // 分类ID
+  category?: ICategory; // 分类对象
+  tagIds: string[]; // 标签ID数组
+  tags?: ITag[]; // 标签对象数组
+  content: string; // Markdown 内容
+  isRecommended: boolean; // 是否推荐
+  isPublic: boolean; // 是否公开
+  viewCount: number; // 浏览次数
+  createdAt?: Date; // 创建时间
+  updatedAt?: Date; // 更新时间
+}
+
 export interface IPhoto {
   id?: string; // 图片ID
   imageUrl: string; // 图片地址

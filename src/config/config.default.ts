@@ -4,6 +4,7 @@ import { Category } from '../entity/category.entity';
 import { Tag } from '../entity/tag.entity';
 import { Photo } from '../entity/photo.entity';
 import { User } from '../entity/user.entity';
+import { Post } from '../entity/post.entity'; // 引入新的 Post 实体
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -23,7 +24,7 @@ export default {
         synchronize: true, // 开发环境下可以设置为 true。生产环境建议设为 false。
         logging: true, // 是否在控制台打印执行的 SQL 语句
         // entities: ['**/entity/**/*.ts'], // 扫描 entity 文件的路径
-        entities: [Category, Tag, Photo, User, /* 其他实体可以放在这里 */ join(__dirname, '../entity/**/*.ts')], // 添加 User 实体
+        entities: [Category, Tag, Photo, User, Post, /* 其他实体可以放在这里 */ join(__dirname, '../entity/**/*.ts')], // 添加 Post 实体
         // 如果您的 entity 文件编译后在 dist 目录，可能需要调整为相对于 dist 的路径
         // entities: [ 'dist/entity/**/*.js' ]
         // charset: 'utf8mb4_unicode_ci', // 可选：为 MySQL 设置字符集

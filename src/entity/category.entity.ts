@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { ICategory } from '../interface';
+import { Post } from './post.entity'; // 引入 Post 实体
 
 @Entity('categories') // 'categories' 是数据库中的表名
 export class Category implements ICategory {
@@ -11,6 +12,9 @@ export class Category implements ICategory {
 
   @Column({ type: 'text', nullable: true }) // 'text' 类型在 MySQL 中是合适的
   description?: string;
+
+  @OneToMany(() => Post, post => post.category) // 一个分类对应多篇文章
+  posts?: Post[]; // 可选，因为在查询分类时不一定总是需要加载文章列表
 
   @CreateDateColumn()
   createdAt: Date;
