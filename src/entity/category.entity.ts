@@ -16,6 +16,9 @@ export class Category implements ICategory {
   @OneToMany(() => Post, post => post.category) // 一个分类对应多篇文章
   posts?: Post[]; // 可选，因为在查询分类时不一定总是需要加载文章列表
 
+  @Column({ type: 'varchar', length: 255, nullable: true }) // 分类图标的 URL 或类名
+  icon?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -16,6 +16,7 @@ export class CategoryService {
     const category = new Category();
     category.name = categoryDto.name;
     category.description = categoryDto.description;
+    category.icon = categoryDto.icon;
     // id, createdAt, updatedAt 将由 TypeORM 自动处理
     return this.categoryRepository.save(category);
   }
@@ -66,6 +67,9 @@ export class CategoryService {
     }
     if (categoryUpdateDto.description !== undefined) {
       categoryToUpdate.description = categoryUpdateDto.description;
+    }
+    if (categoryUpdateDto.icon !== undefined) {
+      categoryToUpdate.icon = categoryUpdateDto.icon;
     }
     // updatedAt 将由 TypeORM 自动处理
     return this.categoryRepository.save(categoryToUpdate);

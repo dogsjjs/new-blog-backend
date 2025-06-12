@@ -6,6 +6,9 @@ export class CreateCategoryDTO {
 
   @Rule(RuleType.string().optional().max(200))
   description?: string;
+
+  @Rule(RuleType.string().optional().max(255)) // 图标可以是 URL 或 CSS 类名
+  icon?: string;
 }
 
 export class UpdateCategoryDTO {
@@ -14,6 +17,9 @@ export class UpdateCategoryDTO {
 
   @Rule(RuleType.string().optional().max(200))
   description?: string;
+
+  @Rule(RuleType.string().optional().max(255))
+  icon?: string;
 }
 
 

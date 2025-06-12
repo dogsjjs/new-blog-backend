@@ -12,6 +12,7 @@ export interface ICategory {
   createdAt?: Date; // 创建时间
   updatedAt?: Date; // 更新时间
   postCount?: number; // 该分类下的文章数量
+  icon?: string; // 分类图标，可选
 }
 
 export interface ITag {
