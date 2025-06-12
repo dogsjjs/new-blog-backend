@@ -1,8 +1,8 @@
-import { Inject, Controller, Get, Post, Put, Del, Param, Body, HttpCode } from '@midwayjs/core';
+import { Inject, Controller, Get, Post, Put, Del, Param, Body, HttpCode, Query } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { CategoryService } from '../service/category.service';
 import { ICategory } from '../interface';
-import { CreateCategoryDTO, UpdateCategoryDTO } from '../dto/category.dto'; // 我们将创建DTO文件
+import { CreateCategoryDTO, UpdateCategoryDTO, QueryCategoryDTO } from '../dto/category.dto'; // 我们将创建DTO文件
 import { Validate } from '@midwayjs/validate';
 
 
@@ -22,8 +22,10 @@ export class CategoryController {
   }
 
   @Get('/', { description: '获取所有博客分类' })
-  async getAllCategories(): Promise<ICategory[]> {
-    return this.categoryService.getAllCategories();
+  @Validate() // 对 QueryCategoryDTO 进行校验
+  async getAllCategories(@Query() queryParams: QueryCategoryDTO): Promise<{ categories: ICategory[]; total: number; page: number; pageSize: number }> {
+    const { categories, total } = await this.categoryService.getAllCategories(queryParams);
+    return { categories, total, page: queryParams.page, pageSize: queryParams.pageSize };
   }
 
   @Get('/:id', { description: '根据ID获取单个博客分类' })

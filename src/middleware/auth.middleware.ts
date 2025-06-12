@@ -75,7 +75,6 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
       try {
         // 验证 token
         const decoded = jwt.verify(token, this.jwtConfig.secret) as IAuthUser; // 类型断言为你的用户负载结构
-
         // 可选：将解码后的用户信息附加到 ctx.state，方便后续业务逻辑使用
         ctx.state.user = decoded;
 

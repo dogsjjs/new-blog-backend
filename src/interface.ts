@@ -11,6 +11,7 @@ export interface ICategory {
   description?: string; // 分类描述，可选
   createdAt?: Date; // 创建时间
   updatedAt?: Date; // 更新时间
+  postCount?: number; // 该分类下的文章数量
 }
 
 export interface ITag {
