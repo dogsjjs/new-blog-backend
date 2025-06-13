@@ -46,6 +46,23 @@ export class TagService {
     return { tags, total };
   }
 
+  /**
+   * 获取所有标签，不进行分页和搜索，通常用于下拉选择等场景
+   * 仅返回 id, name, icon
+   */
+  async getAllTagsForSelect(): Promise<Pick<ITag, 'id' | 'name' | 'icon'>[]> {
+    // 可以根据需要添加排序，例如按名称或创建时间
+    const tags = await this.tagRepository.find({
+      order: { createdAt: 'ASC' },
+    });
+    return tags.map(tag => ({
+      id: tag.id,
+      name: tag.name,
+      icon: tag.icon,
+    }));
+  }
+
+  
   async getTagById(id: string): Promise<ITag | undefined> {
     const tag = await this.tagRepository.findOneBy({ id });
     return tag || undefined;

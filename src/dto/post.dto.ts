@@ -71,18 +71,15 @@ export class PostQueryDTO { // 用于查询文章列表的 DTO
   @Rule(RuleType.string().optional())
   categoryId?: string;
 
-  @Rule(RuleType.string().optional()) // 可以是单个 tagId 或逗号分隔的多个 tagId
-  tagId?: string;
-
-  @Rule(RuleType.string().optional().allow('createdAt', 'updatedAt', 'viewCount', 'title'))
-  sortBy?: string;
-
-  @Rule(RuleType.string().optional().allow('ASC', 'DESC').default('DESC'))
-  sortOrder?: 'ASC' | 'DESC';
+  @Rule(RuleType.array().items(RuleType.string().uuid()).optional().min(0)) // 标签ID数组，每个都是 UUID
+  tagIds?: string[];
 
   @Rule(RuleType.string().optional())
   keyword?: string; // 用于标题或内容搜索
 
   @Rule(RuleType.boolean().optional())
   isPublic?: boolean; // 只查询公开或非公开的文章
+
+  @Rule(RuleType.boolean().optional())
+  isRecommended?: boolean; // 只查询推荐的文章
 }

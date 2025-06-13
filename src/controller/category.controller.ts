@@ -28,6 +28,11 @@ export class CategoryController {
     return { categories, total, page: queryParams.page, pageSize: queryParams.pageSize };
   }
 
+  @Get('/select-options', { description: '获取所有博客分类（用于下拉选择）' })
+  async getAllCategoriesForSelect(): Promise<ICategory[]> {
+    return this.categoryService.getAllCategoriesForSelect();
+  }
+
   @Get('/:id', { description: '根据ID获取单个博客分类' })
   async getCategoryById(@Param('id') id: string): Promise<ICategory> {
     const category = await this.categoryService.getCategoryById(id);

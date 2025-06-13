@@ -27,6 +27,11 @@ export class TagController {
     return { tags, total, page: queryParams.page, pageSize: queryParams.pageSize };
   }
 
+  @Get('/select-options', { description: '获取所有博客标签（用于下拉选择）' })
+  async getAllTagsForSelect(): Promise<Pick<ITag, 'id' | 'name' | 'icon'>[]> {
+    return this.tagService.getAllTagsForSelect();
+  }
+
   @Get('/:id', { description: '根据ID获取单个博客标签' })
   async getTagById(@Param('id') id: string): Promise<ITag> {
     const tag = await this.tagService.getTagById(id);

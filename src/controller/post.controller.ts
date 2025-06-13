@@ -21,6 +21,11 @@ export class PostController {
     return post;
   }
 
+  @Get('/all', { description: '获取所有博客文章（不进行分页和搜索）' })
+  async getAllCategoriesForSelect(): Promise<{ posts: PostEntity[]; total: number; }> {
+    return this.postService.getRealAllPosts();
+  }
+
   @Get('/', { description: '获取博客文章列表（分页）' })
   @Validate() // 对 PostQueryDTO 进行校验
   async getAllPosts(@Query() query: PostQueryDTO): Promise<{ posts: PostEntity[]; total: number; page: number; pageSize: number }> {

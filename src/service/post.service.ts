@@ -1,6 +1,6 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Repository, In, FindOptionsWhere, Like } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Post } from '../entity/post.entity';
 import { Category } from '../entity/category.entity';
 import { Tag } from '../entity/tag.entity';
@@ -59,31 +59,58 @@ export class PostService {
     return this.postRepository.save(post);
   }
 
-  async getAllPosts(query: PostQueryDTO): Promise<{ posts: Post[]; total: number }> {
-    const { page = 1, pageSize = 10, categoryId, sortBy = 'createdAt', sortOrder = 'DESC', keyword, isPublic } = query;
+  /**
+     * 获取所有博客文章，不进行分页和搜索
+     */
+  async getRealAllPosts(): Promise<{ posts: Post[]; total: number }> {
+    // 可以根据需要添加排序，例如按名称或创建时间
+    const queryBuilder = this.postRepository.createQueryBuilder('post')
+      .leftJoinAndSelect('post.category', 'category')
+      .leftJoinAndSelect('post.tags', 'tags');
+    const [posts, total] = await queryBuilder.getManyAndCount();
+    return { posts, total };
+  }
+
+
+  async getAllPosts(queryParams: PostQueryDTO): Promise<{ posts: Post[]; total: number }> {
+    const { page = 1, pageSize = 10, categoryId, tagIds, keyword, isPublic, isRecommended } = queryParams;
     const skip = (page - 1) * pageSize;
 
-    const where: FindOptionsWhere<Post> = {};
+    const queryBuilder = this.postRepository.createQueryBuilder('post')
+      .leftJoinAndSelect('post.category', 'category')
+      .leftJoinAndSelect('post.tags', 'tags');
+
+    if (keyword && keyword.trim() !== '') {
+      const trimmedKeyword = keyword.trim();
+      queryBuilder.andWhere('(post.title LIKE :keyword OR post.description LIKE :keyword)', { keyword: `%${trimmedKeyword}%` });
+    }
+
     if (categoryId) {
-      where.categoryId = categoryId;
-    }
-    if (isPublic !== undefined) {
-      where.isPublic = isPublic;
-    }
-    if (keyword) {
-      where.title = Like(`%${keyword}%`); // 简单标题搜索，可以扩展到内容
+      queryBuilder.andWhere('post.categoryId = :categoryId', { categoryId });
     }
 
-    // Tag 查询稍微复杂，如果需要根据 tagId 过滤，需要使用 queryBuilder
-    // 这里暂时简化，如果需要精确的 tag 过滤，需要调整
+    if (tagIds && tagIds !== undefined && tagIds.length > 0) {
+      // Find posts that have AT LEAST ONE of the specified tags.
+      // The join table name 'post_tags_tag' is TypeORM's default for ManyToMany between Post and Tag.
+      // Ensure your @JoinTable decorator in Post entity matches this or adjust accordingly.
+      queryBuilder.andWhere(
+        'post.id IN (SELECT ptt."postId" FROM post_tags_tag ptt WHERE ptt."tagId" IN (:...tagIdsToFilter))',
+        { tagIdsToFilter: tagIds }
+      );
+    }
 
-    const [posts, total] = await this.postRepository.findAndCount({
-      where,
-      relations: ['category', 'tags'], // 加载关联的 category 和 tags
-      order: { [sortBy]: sortOrder },
-      skip,
-      take: pageSize,
-    });
+    if (typeof isPublic === 'boolean') {
+      queryBuilder.andWhere('post.isPublic = :isPublic', { isPublic });
+    }
+
+    if (typeof isRecommended === 'boolean') {
+      queryBuilder.andWhere('post.isRecommended = :isRecommended', { isRecommended });
+    }
+
+    queryBuilder.orderBy('post.createdAt', 'DESC'); // Default sort order
+    queryBuilder.skip(skip).take(pageSize);
+
+    const [posts, total] = await queryBuilder.getManyAndCount();
     return { posts, total };
   }
 

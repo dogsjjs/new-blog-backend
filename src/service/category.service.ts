@@ -50,6 +50,23 @@ export class CategoryService {
     return { categories, total };
   }
 
+  /**
+   * 获取所有分类，不进行分页和搜索，通常用于下拉选择等场景
+   * 仅返回 id, name, icon
+   */
+  async getAllCategoriesForSelect(): Promise<Pick<ICategory, 'id' | 'name' | 'icon'>[]> {
+    // 可以根据需要添加排序，例如按名称或创建时间
+    const categories = await this.categoryRepository.find({
+      order: { createdAt: 'ASC' },
+      // select: ['id', 'name', 'icon'] // 也可以使用 select 选项，但映射更灵活
+    });
+    return categories.map(category => ({
+      id: category.id,
+      name: category.name,
+      icon: category.icon,
+    }));
+  }
+
   async getCategoryById(id: string): Promise<ICategory | undefined> {
     const category = await this.categoryRepository.findOneBy({ id });
     return category || undefined; // 确保如果未找到则返回 undefined
