@@ -2,20 +2,18 @@
 import { Catch, MidwayHttpError } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { MidwayValidationError } from '@midwayjs/validate';
+import { IGlobalResponse } from '../interface'; // 确保导入了全局响应格式接
 
 /**
- * 统一全局响应格式接口
+ * 默认错误过滤器，用于捕获和处理所有类型的错误
+ * - 处理 MidwayHttpError、MidwayValidationError 和其他错误类型
  */
-interface IGlobalResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  code?: number; // HTTP status code or custom business code
-}
-
 @Catch() // 捕获所有类型的错误
 export class DefaultErrorFilter {
-  async catch(err: Error | MidwayHttpError | MidwayValidationError, ctx: Context) {
+  async catch(
+    err: Error | MidwayHttpError | MidwayValidationError,
+    ctx: Context
+  ) {
     let statusCode: number;
     let responseMessage: string;
     let responseData: any | undefined;
@@ -34,8 +32,7 @@ export class DefaultErrorFilter {
       // 兼容某些库可能直接抛出带有 status 属性的错误对象
       statusCode = (err as any).status;
       responseMessage = err.message;
-    }
-    else {
+    } else {
       // 其他未知错误，视为服务器内部错误
       statusCode = 500;
       responseMessage = 'Internal Server Error';

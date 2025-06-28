@@ -3,12 +3,15 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
 import { ICategory } from '../interface';
 import { Category } from '../entity/category.entity';
-import { QueryCategoryDTO, CreateCategoryDTO, UpdateCategoryDTO } from '../dto/category.dto';
+import {
+  QueryCategoryDTO,
+  CreateCategoryDTO,
+  UpdateCategoryDTO,
+} from '../dto/category.dto';
 // import { v4 as uuidv4 } from 'uuid'; // 如果使用 @PrimaryGeneratedColumn('uuid')，则不再需要手动生成
 
 @Provide()
 export class CategoryService {
-
   @InjectEntityModel(Category)
   categoryRepository: Repository<Category>;
 
@@ -22,19 +25,27 @@ export class CategoryService {
   }
 
   // 使用 QueryBuilder 实现跨字段 OR 搜索的示例
-  async getAllCategories(queryParams: QueryCategoryDTO): Promise<{ categories: ICategory[]; total: number }> {
+  async getAllCategories(
+    queryParams: QueryCategoryDTO
+  ): Promise<{ categories: ICategory[]; total: number }> {
     const { page = 1, pageSize = 10, query } = queryParams;
     const skip = (page - 1) * pageSize;
 
-    const queryBuilder = this.categoryRepository.createQueryBuilder('category')
+    const queryBuilder = this.categoryRepository
+      .createQueryBuilder('category')
       .leftJoinAndSelect('category.posts', 'post') // 左连接 posts 表
       .loadRelationCountAndMap('category.postCount', 'category.posts'); // 计算 posts 的数量并映射到 category.postCount
 
-    if (query && query.trim() !== '') { // 只有当 query 存在且不为空字符串时才添加搜索条件
-      queryBuilder.andWhere('(category.name LIKE :query OR category.description LIKE :query)', { query: `%${query.trim()}%` }); // 使用 trim() 后的 query
+    if (query && query.trim() !== '') {
+      // 只有当 query 存在且不为空字符串时才添加搜索条件
+      queryBuilder.andWhere(
+        '(category.name LIKE :query OR category.description LIKE :query)',
+        { query: `%${query.trim()}%` }
+      ); // 使用 trim() 后的 query
     }
 
-    queryBuilder.orderBy('category.createdAt', 'DESC')
+    queryBuilder
+      .orderBy('category.createdAt', 'DESC')
       .skip(skip)
       .take(pageSize);
 
@@ -54,7 +65,9 @@ export class CategoryService {
    * 获取所有分类，不进行分页和搜索，通常用于下拉选择等场景
    * 仅返回 id, name, icon
    */
-  async getAllCategoriesForSelect(): Promise<Pick<ICategory, 'id' | 'name' | 'icon'>[]> {
+  async getAllCategoriesForSelect(): Promise<
+    Pick<ICategory, 'id' | 'name' | 'icon'>[]
+  > {
     // 可以根据需要添加排序，例如按名称或创建时间
     const categories = await this.categoryRepository.find({
       order: { createdAt: 'ASC' },
@@ -72,7 +85,10 @@ export class CategoryService {
     return category || undefined; // 确保如果未找到则返回 undefined
   }
 
-  async updateCategory(id: string, categoryUpdateDto: UpdateCategoryDTO): Promise<ICategory | null> {
+  async updateCategory(
+    id: string,
+    categoryUpdateDto: UpdateCategoryDTO
+  ): Promise<ICategory | null> {
     const categoryToUpdate = await this.categoryRepository.findOneBy({ id });
     if (!categoryToUpdate) {
       return null;
@@ -93,7 +109,7 @@ export class CategoryService {
   }
 
   async deleteCategory(id: string): Promise<boolean> {
-    const result = await this.categoryRepository.delete(id);
+    const result = await this.categoryRepository.softDelete(id);
     return result.affected > 0;
   }
 }

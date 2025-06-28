@@ -1,26 +1,36 @@
 import { Middleware, IMiddleware } from '@midwayjs/core';
 import { NextFunction, Context } from '@midwayjs/koa';
 
+/**
+ * 报告中间件，用于记录请求的基本信息
+ * - 请求方法
+ * - 请求路径
+ * - 响应状态码
+ * - 响应时间
+ */
 @Middleware()
 export class ReportMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
-      // 控制器前执行的逻辑
       const startTime = Date.now();
-      // 执行下一个 Web 中间件，最后执行到控制器
-      // 这里可以拿到下一个中间件或者控制器的返回值
-      const result = await next();
-      // 控制器之后执行的逻辑
-      ctx.logger.info(
-        `Report in "src/middleware/report.middleware.ts", rt = ${
-          Date.now() - startTime
-        }ms`
-      );
-      // 返回给上一个中间件的结果
-      return result;
+      try {
+        // 执行下一个中间件或路由处理
+        // 注意：next() 返回的是一个 Promise，所以可以使用 await
+        return await next();
+      } finally {
+        // 记录请求方法、路径、状态码和响应时间
+        // 注意：ctx.status 在 next() 执行后才会被设置
+        ctx.logger.info(
+          `[Report] ${ctx.method} ${ctx.path} - ${ctx.status} - rt=${
+            Date.now() - startTime
+          }ms`
+        );
+      }
     };
   }
-
+  /**
+   * 中间件名称，用于注册时识别
+   */
   static getName(): string {
     return 'report';
   }

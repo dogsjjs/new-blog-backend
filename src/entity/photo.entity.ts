@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 import { IPhoto } from '../interface';
 
 @Entity('photos') // 数据库中的表名
@@ -17,4 +24,8 @@ export class Photo implements IPhoto {
 
   @UpdateDateColumn() // 更新时间
   updatedAt: Date;
+
+  // 逻辑删除字段（推荐方式1：DeleteDateColumn，TypeORM自动处理）
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 }

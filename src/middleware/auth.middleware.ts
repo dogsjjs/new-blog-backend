@@ -70,15 +70,14 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
         };
         return;
       }
-
       const token = parts[1];
       try {
         // 验证 token
-        const decoded = jwt.verify(token, this.jwtConfig.secret) as IAuthUser; // 类型断言为你的用户负载结构
+        const decoded = jwt.verify(token, this.jwtConfig.secret, {
+          algorithms: ['HS256'], // 确保使用正确的算法
+        }) as IAuthUser; // 类型断言为你的用户负载结构
         // 可选：将解码后的用户信息附加到 ctx.state，方便后续业务逻辑使用
         ctx.state.user = decoded;
-
-        await next();
       } catch (err) {
         ctx.status = 401;
         let message = 'Invalid token';
@@ -87,19 +86,15 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
         } else if (err.name === 'JsonWebTokenError') {
           message = 'Invalid token signature';
         }
-        // 在开发环境可以打印更详细的错误
-        // if (process.env.NODE_ENV === 'local') {
-        //   console.error('JWT Verification Error:', err);
-        // }
         ctx.logger.warn(`JWT Verification Error for path ${ctx.path}: ${err.message}`);
-
-
         ctx.body = {
           success: false,
           code: 401,
           message: message,
         };
+        return; // 认证失败后直接返回，阻止后续中间件执行
       }
+      await next();
     };
   }
 

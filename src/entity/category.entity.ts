@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  DeleteDateColumn
+} from 'typeorm';
 import { ICategory } from '../interface';
 import { Post } from './post.entity'; // 引入 Post 实体
 
@@ -24,4 +32,8 @@ export class Category implements ICategory {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // 逻辑删除字段（推荐方式1：DeleteDateColumn，TypeORM自动处理）
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 }

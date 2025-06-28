@@ -38,8 +38,12 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async login(loginDto: UserLoginDTO): Promise<{ token: string; user: Omit<User, 'password'> }> {
-    const user = await this.userRepository.findOneBy({ username: loginDto.username });
+  async login(
+    loginDto: UserLoginDTO
+  ): Promise<{ token: string; user: Omit<User, 'password'> }> {
+    const user = await this.userRepository.findOneBy({
+      username: loginDto.username,
+    });
 
     if (!user) {
       throw new MidwayHttpError('User not found', 404);
@@ -57,6 +61,7 @@ export class UserService {
 
     const token = jwt.sign(payload, this.jwtConfig.secret, {
       expiresIn: this.jwtConfig.expiresIn,
+      algorithm: 'HS256', // 确保使用正确的算法
     } as jwt.SignOptions);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

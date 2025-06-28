@@ -164,7 +164,7 @@ export class PostService {
   }
 
   async deletePost(id: string): Promise<boolean> {
-    const result = await this.postRepository.delete(id);
+    const result = await this.postRepository.softDelete(id);
     return result.affected > 0;
   }
 

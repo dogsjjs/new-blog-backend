@@ -8,6 +8,7 @@ import {
   ManyToMany,
   JoinTable,
   Index,
+  DeleteDateColumn
 } from 'typeorm';
 import { IPost } from '../interface';
 import { Category } from './category.entity';
@@ -59,4 +60,8 @@ export class Post implements IPost {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // 逻辑删除字段（推荐方式1：DeleteDateColumn，TypeORM自动处理）
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 }

@@ -5,6 +5,21 @@ export interface IUserOptions {
   uid: number;
 }
 
+/**
+ * 统一全局响应格式接口
+ * @template T - 响应数据类型，默认为 any
+ * @property {boolean} success - 请求是否成功
+ * @property {T} [data] - 响应数据，成功时返回
+ * @property {string} [message] - 响应消息，通常用于描述错误或状态
+ * @property {number} [code] - 响应状态码，通常为 HTTP
+ */
+export interface IGlobalResponse<T = any> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  code?: number;
+}
+
 export interface ICategory {
   id?: string; // 分类ID，通常由数据库生成或在创建时生成
   name: string; // 分类名称
@@ -26,7 +41,7 @@ export interface ITag {
 }
 
 export interface IPost {
-  id?: string;  // 文章ID
+  id?: string; // 文章ID
   title: string; // 文章标题
   description?: string; // 文章描述，可选
   slug?: string; // 自定义 URL
@@ -43,6 +58,15 @@ export interface IPost {
   updatedAt?: Date; // 更新时间
 }
 
+export interface IDiary {
+  id?: string;
+  title: string;
+  content: string; // Markdown content
+  isPublic: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface IPhoto {
   id?: string; // 图片ID
   imageUrl: string; // 图片地址
@@ -52,7 +76,8 @@ export interface IPhoto {
   updatedAt?: Date; // 更新时间 (TypeORM 自动管理)
 }
 
-export interface IUser { // 用户接口
+export interface IUser {
+  // 用户接口
   id?: string; // 用户ID
   username: string; // 用户名
   password?: string; // 密码 (在接口中通常是可选的，因为不会直接返回)

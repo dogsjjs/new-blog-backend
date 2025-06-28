@@ -42,7 +42,7 @@ export class PhotoService {
   }
 
   async deletePhoto(id: string): Promise<boolean> {
-    const result = await this.photoRepository.delete(id);
+    const result = await this.photoRepository.softDelete(id);
     return result.affected > 0;
   }
 }

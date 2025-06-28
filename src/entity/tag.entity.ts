@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  DeleteDateColumn,
+} from 'typeorm';
 import { ITag } from '../interface';
 import { Post } from './post.entity'; // 引入 Post 实体
 
@@ -21,6 +29,10 @@ export class Tag implements ITag {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // 逻辑删除字段（推荐方式1：DeleteDateColumn，TypeORM自动处理）
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 
   // 注意：在 Post 实体中已经通过 @JoinTable 定义了多对多关系的所有者方。
   // Tag 实体作为被拥有方，只需要定义 @ManyToMany 即可。

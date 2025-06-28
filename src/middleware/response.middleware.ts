@@ -1,13 +1,6 @@
 import { IMiddleware, Middleware } from '@midwayjs/core';
 import { NextFunction, Context } from '@midwayjs/koa';
-
-// It's recommended to move this interface to a shared file e.g., src/interface.ts
-interface IGlobalResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  code?: number;
-}
+import { IGlobalResponse } from '../interface'; // 确保导入了全局响应格式接口
 
 @Middleware()
 export class ResponseMiddleware implements IMiddleware<Context, NextFunction> {
