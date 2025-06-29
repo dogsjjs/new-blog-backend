@@ -21,8 +21,8 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
   // 定义不需要 token 验证的白名单路径
   // 可以使用字符串或正则表达式
   private static whiteList: Array<string | RegExp> = [
-    '/user/login', // 假设登录接口路径
-    '/user/register', // 假设注册接口路径
+    '/api/user/login', // 假设登录接口路径
+    '/api/user/register', // 假设注册接口路径
     /^\/public\//, // 匹配所有 /public/ 开头的路径
     '/', // 根路径，如果不需要验证
     // 其他开放接口，例如文档、健康检查等

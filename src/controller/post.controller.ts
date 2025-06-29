@@ -5,7 +5,7 @@ import { Post as PostEntity } from '../entity/post.entity'; // 避免与 HttpPos
 import { CreatePostDTO, UpdatePostDTO, PostQueryDTO } from '../dto/post.dto';
 import { Validate } from '@midwayjs/validate';
 
-@Controller('/post')
+@Controller('/api/post')
 export class PostController {
   @Inject()
   ctx: Context;

@@ -10,7 +10,7 @@ export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1749624076255_7376',
   koa: {
-    port: 7001,
+    port: 7002,
   },
   typeorm: {
     dataSource: {
