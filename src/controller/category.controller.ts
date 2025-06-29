@@ -6,7 +6,7 @@ import { CreateCategoryDTO, UpdateCategoryDTO, QueryCategoryDTO } from '../dto/c
 import { Validate } from '@midwayjs/validate';
 
 
-@Controller('/api/category')
+@Controller('/category')
 export class CategoryController {
 
   @Inject()

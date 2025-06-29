@@ -5,7 +5,7 @@ import { UserRegisterDTO, UserLoginDTO } from '../dto/user.dto';
 import { Validate } from '@midwayjs/validate';
 import { User } from '../entity/user.entity';
 
-@Controller('/api/user')
+@Controller('/user')
 export class UserController {
   @Inject()
   ctx: Context;

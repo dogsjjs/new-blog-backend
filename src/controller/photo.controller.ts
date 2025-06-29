@@ -5,7 +5,7 @@ import { IPhoto } from '../interface';
 import { CreatePhotoDTO, UpdatePhotoDTO } from '../dto/photo.dto';
 import { Validate } from '@midwayjs/validate';
 
-@Controller('/api/photo')
+@Controller('/photo')
 export class PhotoController {
   @Inject()
   ctx: Context;

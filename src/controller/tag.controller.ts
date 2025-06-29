@@ -6,7 +6,7 @@ import { ITag } from '../interface';
 import { CreateTagDTO, UpdateTagDTO, QueryTagDTO } from '../dto/tag.dto';
 import { Validate } from '@midwayjs/validate';
 
-@Controller('/api/tag')
+@Controller('/tag')
 export class TagController {
   @Inject()
   ctx: Context;

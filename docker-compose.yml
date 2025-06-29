@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # 前端服务
+  blog-frontend:
+    build:
+      context: ./new-blog-frontend
+      dockerfile: Dockerfile
+    container_name: blog-frontend-nginx
+    restart: always
+    ports:
+      # [修改] 将服务器的 8080 端口映射到容器的 80 端口
+      # 您可以通过 http://<服务器IP>:8080 访问您的博客
+      - "80:80"
+    depends_on:
+      - blog-backend
+    networks:
+      - blog-network
+
+  # 后端服务
+  blog-backend:
+    build:
+      context: ./new-blog-backend
+      dockerfile: Dockerfile
+    container_name: blog-backend-app
+    restart: always
+    # [说明] 这里不需要暴露端口。后端服务在容器内监听 7001 端口，
+    # 但只对 Docker 网络内部的前端服务可见，不会与服务器上
+    # 已被占用的 7001 端口冲突。
+    environment:
+      - NODE_ENV=production
+      - MYSQL_HOST=blog-db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=haowen
+      - MYSQL_PASSWORD=Wwh451212wh!
+      - MYSQL_DATABASE=new_blog
+      - JWT_SECRET=haowenblogtokenttkenhaowenblogblog
+    depends_on:
+      - blog-db
+    networks:
+      - blog-network
+
+  # 数据库服务
+  blog-db:
+    image: mysql:8.0
+    container_name: blog-db-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Wwh451212wh!
+      MYSQL_DATABASE: new_blog
+      MYSQL_USER: haowen
+      MYSQL_PASSWORD: Wwh451212wh!
+    volumes:
+      - blog-db-data:/var/lib/mysql
+    networks:
+      - blog-network
+
+networks:
+  blog-network:
+    driver: bridge
+
+volumes:
+  blog-db-data:
